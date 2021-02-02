@@ -9,30 +9,52 @@ import (
 )
 
 func main() {
-	fmt.Print("Enter filename: ")
 	scanner := bufio.NewScanner(os.Stdin)
 
+	fmt.Println("Enter filename (filename can be empty)")
 	scanner.Scan()
-	filename := scanner.Text()
+	filename := strings.ToLower(scanner.Text())
 
+	fmt.Println("Enter Extension (extension can be empty)")
+	scanner.Scan()
+	extension := strings.ToLower(scanner.Text())
 
-	var files []string
+	PATH, _ := os.Getwd()
+	var allFiles []string
 
-	root, _ := os.Getwd()
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-		file := strings.Split(path, root + "\\")[1:]
+	err := filepath.Walk(PATH, func(file string, info os.FileInfo, err error) error {
 
-		if len(file) >= 1 {
-			files = append(files, file[0])
+		names := strings.Split(file, PATH)[1]
+
+		if len(names) < 1 {
+			return nil
 		}
+		fullName := removeInitialSlash(names)
+		files := strings.Split(fullName, ".")
+
+		name := files[0]
+		exten := files[1]
+
+		if filename != "" && extension != "" {
+			if strings.Contains(name, filename) && strings.Contains(exten, extension) {
+				allFiles = append(allFiles, fullName)
+			}
+		} else if filename != "" && extension == "" {
+			if strings.Contains(name, filename) {
+				allFiles = append(allFiles, fullName)
+			}
+		} else if extension != "" && filename == "" {
+			if strings.Contains(exten, extension) {
+				allFiles = append(allFiles, fullName)
+			}
+		}
+
 		return nil
 	})
+
 	if err != nil {
 		panic(err)
 	}
-	for _, file := range files {
-		if strings.Contains(file, filename) {
-			fmt.Println(file)
-		}
-	}
+
+	printFiles(allFiles)
 }
