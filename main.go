@@ -19,8 +19,10 @@ func main() {
 	scanner.Scan()
 	extension := strings.ToLower(scanner.Text())
 
-	PATH, _ := os.Getwd()
-	var allFiles []string
+	//PATH, _ := os.Getwd()
+	PATH := "C:\\Users\\Ryuu\\Desktop\\Test"
+	var files []string
+	var filesWithFullPath []string
 
 	err := filepath.Walk(PATH, func(file string, info os.FileInfo, err error) error {
 
@@ -30,22 +32,25 @@ func main() {
 			return nil
 		}
 		fullName := removeInitialSlash(names)
-		files := strings.Split(fullName, ".")
+		splitNameList := strings.Split(fullName, ".")
 
-		name := files[0]
-		exten := files[1]
+		name := splitNameList[0]
+		exten := splitNameList[1]
 
 		if filename != "" && extension != "" {
 			if strings.Contains(name, filename) && strings.Contains(exten, extension) {
-				allFiles = append(allFiles, fullName)
+				files = append(files, fullName)
+				filesWithFullPath = append(filesWithFullPath, file)
 			}
 		} else if filename != "" && extension == "" {
 			if strings.Contains(name, filename) {
-				allFiles = append(allFiles, fullName)
+				files = append(files, fullName)
+				filesWithFullPath = append(filesWithFullPath, file)
 			}
 		} else if extension != "" && filename == "" {
 			if strings.Contains(exten, extension) {
-				allFiles = append(allFiles, fullName)
+				files = append(files, fullName)
+				filesWithFullPath = append(filesWithFullPath, file)
 			}
 		}
 
@@ -56,5 +61,7 @@ func main() {
 		panic(err)
 	}
 
-	printFiles(allFiles)
+	printFiles(files)
+
+	handleCommandInput(filesWithFullPath)
 }
