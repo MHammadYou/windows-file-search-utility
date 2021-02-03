@@ -23,6 +23,7 @@ func printFiles(files []string) {
 	} else {
 		fmt.Printf("Found %d file(s)\n", len(files))
 	}
+
 	for _, file := range files {
 		fmt.Println(file)
 	}

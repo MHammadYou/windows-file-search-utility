@@ -20,19 +20,19 @@ func main() {
 	scanner.Scan()
 	extension := strings.ToLower(scanner.Text())
 
-	PATH, err := os.Getwd()
-	if err != nil { panic(err) }
+	//PATH, err := os.Getwd()
+	//if err != nil { panic(err) }
+
+	PATH := "C:\\Users\\Ryuu\\Desktop\\Test"
 
 	var files []string
 	var filesWithFullPath []string
 
-	err = filepath.Walk(PATH, func(file string, info os.FileInfo, err error) error {
+	err := filepath.Walk(PATH, func(file string, info os.FileInfo, err error) error {
 
 		names := strings.Split(file, PATH)[1]
 
-		if len(names) < 1 {
-			return nil
-		}
+		if len(names) < 1 { return nil }
 
 		fullName := removeInitialSlash(names)
 		splitNameList := strings.Split(fullName, ".")
@@ -62,9 +62,7 @@ func main() {
 		return nil
 	})
 
-	if err != nil {
-		panic(err)
-	}
+	if err != nil { panic(err) }
 
 	printFiles(files)
 

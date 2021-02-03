@@ -26,9 +26,17 @@ func renameFiles(files []string, PATH string) {
 	case "n":
 		os.Exit(0)
 	case "y":
-		for _, file := range files {
+		for index, file := range files {
 			oldExten := path.Ext(file)
-			err := os.Rename(file, PATH + newName + oldExten)
+
+			var err error
+			if index > 0 {
+				newPath := fmt.Sprintf("%s\\%s (%d)%s", PATH, newName, index + 1, oldExten)
+				err = os.Rename(file, newPath)
+			} else {
+				newPath := fmt.Sprintf("%s\\%s%s", PATH, newName, oldExten)
+				err = os.Rename(file, newPath)
+			}
 
 			if err != nil {
 				panic(err)
