@@ -1,36 +1,10 @@
-package main
+package commands
 
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 )
-
-
-func handleCommandInput(files []string) {
-
-	scanner := bufio.NewScanner(os.Stdin)
-
-	if len(files) > 0 {
-		fmt.Println("Use below commands")
-		fmt.Println("q: to quit")
-		fmt.Println("r: to rename files")
-		fmt.Println("e: to change extension")
-		fmt.Println("d: to delete files")
-
-		scanner.Scan()
-		command := scanner.Text()
-
-		switch command {
-		case "q":
-			os.Exit(0)
-		case "d":
-			removeFiles(files)
-		}
-	}
-}
-
 
 func removeFiles(files []string) {
 
@@ -49,11 +23,14 @@ func removeFiles(files []string) {
 	case "y":
 		fmt.Println("Deleted files")
 		for _, file := range files {
-			log.Fatal(os.Remove(file))
+			err := os.Remove(file)
+
+			if err != nil {
+				panic(err)
+			}
 		}
 	default:
 		fmt.Println("Please choose a valid command")
 		removeFiles(files)
 	}
-
 }
