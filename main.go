@@ -20,15 +20,13 @@ func main() {
 	scanner.Scan()
 	extension := strings.ToLower(scanner.Text())
 
-	//PATH, err := os.Getwd()
-	//if err != nil { panic(err) }
-
-	PATH := "C:\\Users\\Ryuu\\Desktop\\Test"
+	PATH, err := os.Getwd()
+	if err != nil { panic(err) }
 
 	var files []string
 	var filesWithFullPath []string
 
-	err := filepath.Walk(PATH, func(file string, info os.FileInfo, err error) error {
+	err = filepath.Walk(PATH, func(file string, info os.FileInfo, err error) error {
 
 		names := strings.Split(file, PATH)[1]
 
